@@ -19,7 +19,7 @@ def main():
         st.bar_chart(df,x='Month',y='Sales')
         
         
-    #Creating the comment section    
+    #Comment section   
     
     df_comment = None
     
@@ -31,11 +31,11 @@ def main():
     else:
         df_comment = st.session_state.comment
     
-    if 'just_posted' not in st.session_state:
-        st.session_state.just_posted = False
+    if 'just_submitted' not in st.session_state:
+        st.session_state.just_submitted = False
     
     #rendering comment section
-    with st.expander('💬 Open comments'):
+    with st.expander('💬 Open comment section'):
         #formating the output of comments and replies
         COMMENT_TEMPLATE = '**{}** - {}\n\n|&nbsp;&nbsp;&nbsp;&nbsp;{}'
         REPLY_TEMPLATE = '\n\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;**Reply**: {} - {}'
@@ -45,9 +45,9 @@ def main():
                   ('' if pd.isnull(comment['Reply']) else REPLY_TEMPLATE.format(comment['Reply'],comment['Reply Date']))
             st.markdown(str)
         
-        if st.session_state.just_posted:
-            st.success("☝️ Your comment was successfully posted.") 
-            st.session_state.just_posted = False
+        if st.session_state.just_submitted:
+            st.success("☝️ Your comment was successfully submitted.") 
+            st.session_state.just_submitted = False
     
         st.write('***Add your comment***')
         
@@ -55,7 +55,7 @@ def main():
             #adding text inputs for name and comment, and a submit button
             name = st.text_input('Name')
             comment = st.text_area('Comment')
-            submit = st.form_submit_button('Add comment')
+            submit = st.form_submit_button('Submit')
                   
             if submit and name!= '' and comment!='':
                 #getting server local time
@@ -65,8 +65,8 @@ def main():
                 #overwriting the dataframe into csv comment file
                 df_comment.to_csv('comment.csv',index=False)
                 #update the session state to flag a new comment is justed added
-                if st.session_state.just_posted == False:
-                    st.session_state.just_posted = True
+                if st.session_state.just_submitted == False:
+                    st.session_state.just_submitted = True
                 
                 #delete the session state to force to refresh all comments
                 del st.session_state.comment
